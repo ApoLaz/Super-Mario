@@ -36,15 +36,15 @@ body {
 			this.load.tilemap('level', 'assets/2016059.json', null,
             Phaser.Tilemap.TILED_JSON);
              this.load.spritesheet('Bonus', 'assets/bonus.png', 16, 16);
-            this.load.audio('soundtrack', ['sound/mario.mp3']);
-            this.load.audio('dies', ['sound/die.wav']);
-            this.load.audio('coin', ['sound/coin.wav']);
-            this.load.audio('jump', ['sound/jump.wav']);
-            this.load.audio('kill', ['sound/kick.wav']);
+            this.load.audio('soundtrack', ['audio/mario.mp3']);
+            this.load.audio('dies', ['audio/die.wav']);
+            this.load.audio('coin', ['audio/coin.wav']);
+            this.load.audio('jump', ['audio/jump.wav']);
+            this.load.audio('kill', ['audio/kick.wav']);
             
 		}
         var score=0;
-        var coinscore=0;
+        var coins=0;
         var lives = 3;
         
         
