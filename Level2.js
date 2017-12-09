@@ -13,7 +13,7 @@ var Level2 = {
 
 			//  We need this because the assets are on github pages
 			//  Remove the next 2 lines if running locally
-			this.load.baseURL = 'https://ApoLaz.github.io/Super-Mario/';
+			this.load.baseURL = 'https://apolaz.github.io/Super-Mario/';
 			this.load.crossOrigin = 'anonymous';
 
 			this.load.spritesheet('tiles', 'assets/super_mario_tiles.png', 16,
