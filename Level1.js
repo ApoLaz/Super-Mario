@@ -2,36 +2,31 @@ var Level1 = {
 		preload:function(){
 
 			//Audio
-			game.load.bitmapFont('font','assets/font3.png','assets/font3.xml');
-			game.load.audio('gameover', ['audio/gameover.ogg']);
-			game.load.audio('death',['audio/death.ogg']);
+			game.load.audio('gameover', ['audio/gameover.mp3']);
+			game.load.audio('death',['audio/die.mp3']);
 			game.load.audio('coin',['audio/coin.mp3']);
-			game.load.audio('theme song',['audio/dragonballTheme.ogg']);
+			game.load.audio('theme song',['audio/mario.mp3']);
 			game.load.audio('jump',['audio/jump.wav']);
-			game.load.audio('mysteryboxhit',['audio/mysteryboxhit.wav']);
-			game.load.audio('supersaiyan',['audio/supersaiyan.ogg']);
 			game.load.audio('stomp',['audio/stomp.wav']);
-			game.load.audio('portalsound', ['audio/portalsound.ogg']);
+			game.load.audio('portalsound', ['audio/portalsound.mp3']);
 			
 
 			//  We need this because the assets are on github pages
 			//  Remove the next 2 lines if running locally
-			this.load.baseURL = 'https://dhmhtrhsd.github.io/Super-Mario/';
+			this.load.baseURL = 'https://ApoLaz.github.io/Super-Mario/';
 			this.load.crossOrigin = 'anonymous';
 
 			this.load.spritesheet('tiles', 'assets/super_mario_tiles.png', 16,
 					16);
 			this.load.spritesheet('portalbox', 'assets/portal1.png', 18,
 					46);
-			this.load.spritesheet('mysterybox', 'assets/mysterybox.png', 16,
-					16);
 			this.load.spritesheet('mushroomsprite', 'assets/mushroomsprite.png', 16,
 					16);
 			this.load.spritesheet('goomba', 'assets/goomba.png', 16, 16);
-			this.load.spritesheet('dragonball', 'assets/dragonballfinal.png', 20, 29);
-			this.load.spritesheet('coin', 'assets/dragonballCoinSprite1.png', 16, 16);
-			this.load.spritesheet('frieza', 'assets/frieza.png', 43, 49);
-			this.load.tilemap('level', 'assets/Map-Level1.json', null,
+			this.load.spritesheet('mario', 'assets/mario.png', 20, 29);
+			this.load.spritesheet('coin', 'assets/coin.png', 16, 16);
+			this.load.spritesheet('enemy', 'assets/enemy.png', 43, 49);
+			this.load.tilemap('level', 'assets/Map1.json', null,
 					Phaser.Tilemap.TILED_JSON);
 
 		},
@@ -41,9 +36,7 @@ var Level1 = {
 			this.camera.flash(000000, 2000);
 			themesnd = game.add.audio("theme song");
 			themesnd.loopFull(0.2);		//theme song	
-			mysteryboxhitsnd = game.add.audio("mysteryboxhit");
-			supersaiyansnd = game.add.audio("supersaiyan");			
-			deathsnd = game.add.audio("death");			//death sound
+			deathsnd = game.add.audio("die");			//death sound
 			gameoversnd = game.add.audio("gameover");
 			jumpsnd = game.add.audio("jump");
 			portalsnd = game.add.audio("portalsound");
@@ -72,18 +65,7 @@ var Level1 = {
 			portalbox.callAll('animations.play','animations','still');
 			portalbox.setAll('body.immovable',true);
 
-			mysterybox = game.add.group();
-			mysterybox.enableBody = true;
-			map.createFromTiles(22,null,'mysterybox','stuff',mysterybox);
-			mysterybox.callAll('animations.add', 'animations', 'shine', [0,1,2],3,true);
-			mysterybox.callAll('animations.play','animations','shine');
-			mysterybox.setAll('body.immovable',true);
-			
-
-			mushroom = game.add.group();
-			mushroom.enableBody = true;
-			
-
+		
 			coins = game.add.group();
 			coins.enableBody = true;
 			map.createFromTiles(2, null, 'coin', 'stuff', coins);
@@ -101,17 +83,17 @@ var Level1 = {
 			goombas.setAll('body.velocity.x', -20);
 			goombas.setAll('body.gravity.y', 500);
 
-			frieza = game.add.group();
-			frieza.enableBody = true;
-			map.createFromTiles(27, null, 'frieza', 'stuff', frieza);
-			frieza.callAll('animations.add', 'animations', 'walkRight', [0], 1, true);
-			frieza.callAll('animations.add', 'animations', 'walkLeft', [1], 1, true);
-			frieza.callAll('animations.play', 'animations', 'walkLeft');
-			frieza.setAll('body.bounce.x', 1);
-			frieza.setAll('body.velocity.x', -80);
-			frieza.setAll('body.gravity.y', 500);
+			enemy = game.add.group();
+			enemy.enableBody = true;
+			map.createFromTiles(27, null, 'enemy', 'stuff', enemy);
+			enemy.callAll('animations.add', 'animations', 'walkRight', [0], 1, true);
+			enemy.callAll('animations.add', 'animations', 'walkLeft', [1], 1, true);
+			enemy.callAll('animations.play', 'animations', 'walkLeft');
+			enemy.setAll('body.bounce.x', 1);
+			enemy.setAll('body.velocity.x', -80);
+			enemy.setAll('body.gravity.y', 500);
 
-			player = game.add.sprite(16, game.world.height - 61, 'dragonball');
+			player = game.add.sprite(16, game.world.height - 61, 'mario');
 			game.physics.arcade.enable(player);
 			player.body.gravity.y = 370;
 			player.body.setSize(16,29);
@@ -149,14 +131,12 @@ var Level1 = {
 		update: function() {
 			game.physics.arcade.collide(player, layer);
 			game.physics.arcade.collide(goombas, layer);
-			game.physics.arcade.collide(frieza, layer);
-			game.physics.arcade.collide(player, mysterybox, mysteryboxOverlap);
-			game.physics.arcade.collide(mushroom, player, mushroomOverlap);
-			game.physics.arcade.overlap(frieza, layer, friezaHit);
+			game.physics.arcade.collide(enemy, layer);
+			game.physics.arcade.overlap(enemy, layer, enemyHit);
 			game.physics.arcade.overlap(player, goombas, goombaOverlap);
 			game.physics.arcade.overlap(player, coins, coinOverlap);
 			game.physics.arcade.overlap(portalbox, player, portalboxOverlap);
-			game.physics.arcade.overlap(player, frieza, friezaOverlap);
+			game.physics.arcade.overlap(player, enemy, enemyOverlap);
 
 
 
